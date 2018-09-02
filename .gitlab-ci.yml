@@ -30,7 +30,7 @@ compile-go-1.11-debian:
     - ./bottalk-cli
 
 stage-bottalk-alpine:
-  image: docker:dind
+  image: docker:latest
   stage: stage
   when: on_success
   only:
