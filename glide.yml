@@ -1,4 +1,0 @@
-package: gitlab.com/chrl/bottalk-cli
-import:
-- package: github.com/urfave/cli
-
