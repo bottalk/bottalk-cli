@@ -44,7 +44,7 @@ func getTestCommands() []cli.Command {
 
 			jsonValue, _ := json.Marshal(values)
 
-			response, err := http.Post("https://dev.bottalk.de/api/externaltest", "application/json", bytes.NewBuffer(jsonValue))
+			response, err := http.Post("https://bottalk.de/api/externaltest", "application/json", bytes.NewBuffer(jsonValue))
 
 			if err != nil {
 				fmt.Printf("%s", err)
