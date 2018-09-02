@@ -6,10 +6,7 @@ RUN go version
 
 COPY . /go/src/github.com/bottalk/bottalk-cli
 WORKDIR /go/src/github.com/bottalk/bottalk-cli
-RUN set -x && \
-    go get github.com/golang/dep/cmd/dep && \
-    dep ensure -v
-
+RUN go get -v .
 RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -a -o bottalk .
 
 # Stage 2 (to create a downsized "container executable", ~7MB)
