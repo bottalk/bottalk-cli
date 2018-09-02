@@ -18,7 +18,7 @@ compile-go-1.11-debian:
   - cp -Rv ./* /go/src/gitlab.com/chrl/bottalk-cli
   - cd /go/src/gitlab.com/chrl/bottalk-cli
   - go get -v .
-  - go build main.go
+  - go build -o bottalk-cli
 # Dumb workaround pt2
   - cp -v /go/bin/bottalk-cli $BUILDPATH/
   artifacts:
