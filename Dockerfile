@@ -1,3 +1,3 @@
 FROM alpine
 
-COPY ./bottalk ./bottalk
+COPY ./bottalk-cli ./bottalk
