@@ -18,3 +18,4 @@ build:
     - go build -o bottalk
     # Execute the binary
     - ./bottalk
+    - docker build .
