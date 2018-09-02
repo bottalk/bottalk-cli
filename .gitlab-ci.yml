@@ -30,8 +30,7 @@ compile-go-1.11-debian:
     - ./bottalk-cli
 
 stage-bottalk-alpine:
-  services:
-  - docker:dind
+  image: docker:dind
   stage: stage
   when: on_success
   only:
@@ -40,7 +39,7 @@ stage-bottalk-alpine:
     - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN registry.gitlab.com
     - docker build -t registry.gitlab.com/chrl/bottalk-cli .
     - docker push registry.gitlab.com/chrl/bottalk-cli
-    - docker rm -f bottalk-cli-staging
+    - docker rm -f bottalk-cli
 
 production-redacted-alpine:
   image: alpine
