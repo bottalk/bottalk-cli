@@ -8,6 +8,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	pathlib "path"
 	"path/filepath"
 
 	"github.com/urfave/cli"
@@ -30,7 +31,7 @@ func getTestCommands() []cli.Command {
 			matches, _ := filepath.Glob(path + "*.yml")
 			if len(matches) == 0 {
 				log.Println("Scenario files not found -- nothing to test")
-				os.Exit(1)
+				os.Exit(0)
 			}
 
 			sendFiles := []filedata{}
@@ -38,7 +39,7 @@ func getTestCommands() []cli.Command {
 			for _, file := range matches {
 				log.Println("* " + file)
 				dat, _ := ioutil.ReadFile(file)
-				sendFiles = append(sendFiles, filedata{Name: file, Content: string(dat)})
+				sendFiles = append(sendFiles, filedata{Name: pathlib.Base(file), Content: string(dat)})
 			}
 
 			values := map[string][]filedata{"files": sendFiles}
@@ -69,7 +70,18 @@ func getTestCommands() []cli.Command {
 					os.Exit(1)
 				} else {
 					log.Println("Temprorary skill created successfully")
-					os.Exit(0)
+					if len(m["tests"].([]interface{})) > 1 {
+						log.Println("Requesting test start:")
+						for _, test := range m["tests"].([]interface{}) {
+							testConfig := test.(map[string]interface{})
+							if testConfig["id"] != "random" {
+								log.Println("* " + testConfig["name"].(string))
+							}
+						}
+					} else {
+						log.Println("No custom tests to run")
+						os.Exit(0)
+					}
 				}
 			}
 			return nil
