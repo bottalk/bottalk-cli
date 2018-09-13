@@ -11,6 +11,8 @@ import (
 //Version of the cli
 const Version = 19
 
+var path string
+
 func main() {
 	bottalkCli := cli.NewApp()
 	bottalkCli.Name = "bottalk"
@@ -21,6 +23,16 @@ func main() {
 		bottalkCli.Commands,
 		getTestCommands()...,
 	)
+
+	bottalkCli.Flags = []cli.Flag{
+		cli.StringFlag{
+			Name:        "dir",
+			Value:       "./",
+			Usage:       "Directory to work in",
+			Destination: &path,
+			EnvVar:      "APP_DIR,DIR",
+		},
+	}
 
 	checkUpdate()
 

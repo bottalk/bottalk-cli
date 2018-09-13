@@ -25,8 +25,9 @@ func getTestCommands() []cli.Command {
 		Name:  "test",
 		Usage: "Start test in the current folder",
 		Action: func(c *cli.Context) error {
-			log.Println("Gathering files in current folder")
-			matches, _ := filepath.Glob("*.yml")
+
+			log.Println("Gathering files in folder: ", path)
+			matches, _ := filepath.Glob(path + "*.yml")
 			if len(matches) == 0 {
 				log.Println("Scenario files not found -- nothing to test")
 				os.Exit(1)
