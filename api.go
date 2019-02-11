@@ -3,14 +3,16 @@ package main
 import (
 	"bytes"
 	"encoding/json"
+	"github.com/olekukonko/tablewriter"
 	"io/ioutil"
 	"log"
 	"net/http"
+	"os"
 	"strconv"
 	"strings"
 )
 
-const apiUrl = "http://localhost:9098/"
+const apiUrl = "https://api.bottalk.de/"
 
 type ResponseBasic struct {
 	Result  string
@@ -25,6 +27,28 @@ func (h ResponseBasic) GetError() string {
 type ResponseInfo struct {
 	ResponseBasic
 	User string
+}
+
+type ResponseSkillList struct {
+	ResponseBasic
+	Skills []struct {
+		Name     string
+		Token    string
+		Language string
+	}
+}
+
+type ResponseSkillFiles struct {
+	ResponseBasic
+	Skill struct {
+		Name     string
+		Token    string
+		Language string
+	}
+	Files []struct {
+		Name    string
+		Content string
+	}
 }
 
 func apiGet(action string, v interface{}) string {
@@ -65,15 +89,15 @@ func apiGet(action string, v interface{}) string {
 		return ""
 	}
 
-	if len(basic.Error) > 0 {
-		log.Fatal("Failed to make a call: " + basic.GetError() + " => " + basic.Message)
-		return ""
-	}
-
 	if strings.Contains(basic.Message, "token expired") {
 		log.Println("token expired, trying to refresh")
 		getTokenRefresh()
 		return apiGet(action, v)
+	}
+
+	if len(basic.Error) > 0 {
+		log.Fatal("Failed to make a call: " + basic.GetError() + " => " + basic.Message)
+		return ""
 	}
 
 	return string([]byte(body))
@@ -84,4 +108,34 @@ func getInfo() {
 	info := ResponseInfo{}
 	apiGet("info", &info)
 	log.Println("You are logged in with account: " + info.User)
+}
+
+func getSkillList() {
+
+	info := ResponseSkillList{}
+	apiGet("skills", &info)
+
+	table := tablewriter.NewWriter(os.Stdout)
+	table.SetHeader([]string{"ID", "Language", "Name"})
+
+	for _, v := range info.Skills {
+		table.Append([]string{v.Token, v.Language, v.Name})
+	}
+	table.Render() // Send output
+}
+
+func getSkillFiles(skillToken string) {
+
+	info := ResponseSkillFiles{}
+	apiGet("skill/"+skillToken, &info)
+
+	path := info.Skill.Name
+
+	if _, err := os.Stat(path); os.IsNotExist(err) {
+		os.Mkdir(path, 0700)
+	}
+
+	for _, j := range info.Files {
+		ioutil.WriteFile(path+"/"+j.Name, []byte(j.Content), 0700)
+	}
 }

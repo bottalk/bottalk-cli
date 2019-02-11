@@ -40,6 +40,11 @@ func main() {
 		getLoginCommands()...,
 	)
 
+	bottalkCli.Commands = append(
+		bottalkCli.Commands,
+		getSkillCommands()...,
+	)
+
 	bottalkCli.Flags = []cli.Flag{
 		cli.StringFlag{
 			Name:        "dir",
