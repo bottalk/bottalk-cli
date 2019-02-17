@@ -10,7 +10,7 @@ import (
 )
 
 //Version of the cli
-const Version = 19
+const Version = 21
 
 var path string
 
@@ -32,17 +32,16 @@ func main() {
 
 	bottalkCli.Commands = append(
 		bottalkCli.Commands,
-		getTestCommands()...,
-	)
-
-	bottalkCli.Commands = append(
-		bottalkCli.Commands,
 		getLoginCommands()...,
 	)
 
 	bottalkCli.Commands = append(
 		bottalkCli.Commands,
 		getSkillCommands()...,
+	)
+	bottalkCli.Commands = append(
+		bottalkCli.Commands,
+		getTestCommands()...,
 	)
 
 	bottalkCli.Flags = []cli.Flag{
@@ -55,8 +54,9 @@ func main() {
 		},
 	}
 
-	loadToken()
-
+	if !loadToken() {
+		log.Fatal("Couldn't load your token. Please login to bottalk, typing command: " + os.Args[0] + " login")
+	}
 	checkUpdate()
 
 	err := bottalkCli.Run(os.Args)
