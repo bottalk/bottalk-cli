@@ -22,6 +22,17 @@ func getSkillCommands() []cli.Command {
 					return nil
 				},
 			},
+			{
+
+				Name:  "new",
+				Usage: "Create new skill",
+				Action: func(c *cli.Context) error {
+					skillLanguage := c.Args().Get(1)
+					skillName := c.Args().Get(0)
+					createNewSkill(skillName, skillLanguage)
+					return nil
+				},
+			},
 		},
 	}, {
 		Name:  "pull",
@@ -30,6 +41,13 @@ func getSkillCommands() []cli.Command {
 			skillToken := c.Args().Get(0)
 			log.Println("Requesting skill " + skillToken)
 			getSkillFiles(skillToken)
+			return nil
+		},
+	}, {
+		Name:  "push",
+		Usage: "push skill files to bottalk server",
+		Action: func(c *cli.Context) error {
+			pushSkillFiles()
 			return nil
 		},
 	}}
