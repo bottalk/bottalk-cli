@@ -14,7 +14,7 @@ import (
 	"strings"
 )
 
-const apiUrl = "http://localhost:9098/"
+const apiUrl = "https://api.bottalk.de/"
 
 type ResponseBasic struct {
 	Result  string
